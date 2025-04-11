@@ -27,8 +27,8 @@ import geopandas as gpd
 
 @dataclass
 class PixCGpkgReader:
-    """Class to read geopackage database from path
-    """
+    """Class to read geopackage database from path"""
+
     path: str
     layers: list[str] = None
     area_of_interest: gpd.GeoDataFrame = None
@@ -41,7 +41,7 @@ class PixCGpkgReader:
         """reads a single layer of geopackage database
 
         Args:
-            layername (str): name of the database, 
+            layername (str): name of the database,
             from list accessible with self.layers
 
         Returns:
@@ -78,7 +78,6 @@ class PixCGpkgReader:
             layers = self.layers
 
         for layer in tqdm(layers):
-
             layer_data = self.read_single_layer(
                 layer,
             )

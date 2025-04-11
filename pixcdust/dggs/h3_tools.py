@@ -36,18 +36,13 @@ def gdf_to_h3_gdf(
     gdf: gpd.GeoDataFrame,
     resolution: int,
     var: str,
-        ) -> gpd.GeoDataFrame:
-
+) -> gpd.GeoDataFrame:
     h3_col = get_h3_res_name(resolution)
 
     gdf[h3_col] = gdf.apply(
-        lambda row: str(h3.geo_to_h3(
-            row.geometry.y,
-            row.geometry.x,
-            resolution
-            )),
+        lambda row: str(h3.geo_to_h3(row.geometry.y, row.geometry.x, resolution)),
         axis=1,
-        )
+    )
 
     # compute statistics in each H3 cell in a new dataframe
     h3_df = gdf.groupby(h3_col)[var].describe().reset_index()

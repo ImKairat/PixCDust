@@ -20,15 +20,12 @@ class PixCConverter:
         mode: str = "w",
         compute_wse: bool = True,
     ):
-
         if isinstance(path_in, list):
             self.path_in = self._sort_input_files(path_in)
         elif isinstance(path_in, str):
             self.path_in = [path_in]
         else:
-            raise IOError(
-                f"Expected `path_in` list or str, received {type(path_in)}"
-            )
+            raise IOError(f"Expected `path_in` list or str, received {type(path_in)}")
 
         self.path_out = path_out
         self.variables = variables
@@ -54,29 +51,27 @@ class PixCConverter:
 
     @staticmethod
     def _get_vars_wse_computation() -> list[str]:
-        return ['height', 'geoid']
+        return ["height", "geoid"]
 
     @staticmethod
     def _get_name_wse_var() -> str:
-        return 'wse'
+        return "wse"
 
     @staticmethod
     def _sort_input_files(files: list[str]) -> list[str]:
         """method sorting files in ascending order based on their names.
         Warning this works with SWOT Pixel Cloud original file names only.
         """
-        new_index = np.argsort(
-            [os.path.basename(f) for f in files]
-        )
+        new_index = np.argsort([os.path.basename(f) for f in files])
         return np.asarray(files)[new_index].tolist()
 
 
 @dataclass
 class GeoLayerH3Projecter:
-    """Class for adding H3 projections to databases
+    """Class for adding H3 projections to databases"""
 
-    """
     from pixcdust.dggs import h3_tools
+
     data: gpd.GeoDataFrame
     variable: str
     resolution: int
@@ -100,30 +95,30 @@ class GeoLayerH3Projecter:
             IOError: if operator is not the function name of\
                 the operator module
         """
-        _k_operator = 'operator'
-        _k_to = 'threshold'
+        _k_operator = "operator"
+        _k_to = "threshold"
         # Test if conditions dict meets specifications
         print(conditions)
         for k in conditions.keys():
             if k not in self.data.columns:
                 raise IOError(
-                    f'dict conditions expected existing\
+                    f"dict conditions expected existing\
                         variables (in {self.data.columns}),\
-                        received {k}'
+                        received {k}"
                 )
             for instructions in conditions[k].keys():
                 if instructions not in [_k_operator, _k_to]:
                     raise IOError(
-                        f'dict conditions expected {_k_to} and {_k_operator}\
+                        f"dict conditions expected {_k_to} and {_k_operator}\
                         keys in dict {conditions},\
-                        received {instructions}'
+                        received {instructions}"
                     )
                 if conditions[k][_k_operator] not in operator.__dict__:
                     raise IOError(
-                        f'operator expected a function name\
+                        f"operator expected a function name\
                             from the operator built-in module\
                             {operator.__dict__},\
-                            found {conditions[k][_k_operator]} instead'
+                            found {conditions[k][_k_operator]} instead"
                     )
             print(f"operator.{conditions[k][_k_operator]}")
             ope = literal_eval(f"operator.{conditions[k][_k_operator]}")

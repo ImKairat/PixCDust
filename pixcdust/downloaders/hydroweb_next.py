@@ -63,6 +63,7 @@ class Downloader:
         AttributeError: if the geometry is not one
             of (str, tuple, list, gpd.GeoDataFrame)
     """
+
     PROVIDER = "hydroweb_next"
 
     def __init__(
@@ -73,7 +74,6 @@ class Downloader:
         path_download: str = ("/tmp/hydroweb_next",),
         verbose: Optional[int] = (0,),
     ):
-
         self.collection_name = collection_name
         self.geometry = geometry
         self.dates = dates
@@ -107,10 +107,8 @@ class Downloader:
         }
 
         if self.dates is not None:
-            self.query_args["start"] = \
-                self.dates[0].strftime("%Y-%m-%dT%H:%M:%SZ")
-            self.query_args["end"] = \
-                self.dates[1].strftime("%Y-%m-%dT%H:%M:%SZ")
+            self.query_args["start"] = self.dates[0].strftime("%Y-%m-%dT%H:%M:%SZ")
+            self.query_args["end"] = self.dates[1].strftime("%Y-%m-%dT%H:%M:%SZ")
 
         self.query_args.update(default_search_criteria)
 
@@ -157,28 +155,29 @@ class Downloader:
             axis=1,
         )
         if (geom["nodes_count"] > 200).any():
-            raise AttributeError((
-                "One or several of your search polygons have too many nodes,"
-                "consider using the tolerance parameter"
-                "in order to simplify the polygons."
-            ))
+            raise AttributeError(
+                (
+                    "One or several of your search polygons have too many nodes,"
+                    "consider using the tolerance parameter"
+                    "in order to simplify the polygons."
+                )
+            )
 
         return geom
 
     def __check_collection_name(self):
-
         list_collections = [
-            d['ID'] for d in self.dag.list_product_types(
-                provider=self.PROVIDER
-                )
+            d["ID"] for d in self.dag.list_product_types(provider=self.PROVIDER)
         ]
 
         if self.collection_name not in list_collections:
-            raise ValueError((
-                "Did not find collection_name in "
-                f"list of available collections in {self.PROVIDER}."
-                f"\nAvailable collections are: {list_collections}"
-            ))
+            raise ValueError(
+                (
+                    "Did not find collection_name in "
+                    f"list of available collections in {self.PROVIDER}."
+                    f"\nAvailable collections are: {list_collections}"
+                )
+            )
 
     def search_download(self, tolerance: float = None):
         if isinstance(self.geometry, str) or self.geometry is None:
@@ -193,10 +192,12 @@ class Downloader:
                 self._search(geom)
 
         else:
-            raise AttributeError((
-                "geometry should string or gpd.GeoDataFrame, "
-                f"received {type(self.geometry)} instead"
-            ))
+            raise AttributeError(
+                (
+                    "geometry should string or gpd.GeoDataFrame, "
+                    f"received {type(self.geometry)} instead"
+                )
+            )
 
         # This command actually downloads the matching products
         downloaded_paths = self.dag.download_all(

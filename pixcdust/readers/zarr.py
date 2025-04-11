@@ -38,24 +38,28 @@ class PixCZarrReader:
 
     def read(
         self,
-        date_interval: Optional[
-            Tuple[datetime.datetime, datetime.datetime]
-            ] | None = None,
-            ):
-
+        date_interval: Optional[Tuple[datetime.datetime, datetime.datetime]]
+        | None = None,
+    ):
         collection: zcollection.Dataset = zcollection.open_collection(
             self.path,
-            mode='r',
+            mode="r",
         )
 
         if date_interval:
             date_min = date_interval[0]
             date_max = date_interval[1]
             self.data = collection.load(
-                filters=lambda keys: date_min <= datetime.datetime(
-                    keys['year'], keys['month'], keys['day'],
-                    keys['hour'], keys['minute'], keys['second'],
-                ) <= date_max
+                filters=lambda keys: date_min
+                <= datetime.datetime(
+                    keys["year"],
+                    keys["month"],
+                    keys["day"],
+                    keys["hour"],
+                    keys["minute"],
+                    keys["second"],
+                )
+                <= date_max
             )
         else:
             self.data = collection.load()
@@ -68,7 +72,7 @@ class PixCZarrReader:
     def to_geodataframe(
         self,
         **kwargs,
-            ) -> gpd.GeoDataFrame:
+    ) -> gpd.GeoDataFrame:
         """_summary_
 
         Args:
@@ -91,4 +95,4 @@ class PixCZarrReader:
             long_name=cst.default_long_name,
             lat_name=cst.default_lat_name,
             **kwargs,
-            )
+        )

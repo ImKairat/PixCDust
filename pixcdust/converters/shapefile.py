@@ -6,9 +6,8 @@ from pixcdust.readers.netcdf import PixCNcSimpleReader
 
 
 class PixCNc2ShpConverter(PixCConverter):
-    """Class for converting Pixel Cloud files to Shapefile database
+    """Class for converting Pixel Cloud files to Shapefile database"""
 
-    """
     def database_from_nc(self):
         """function to create a database from a single or multiple\
             netcdf PIXC files
@@ -20,7 +19,7 @@ class PixCNc2ShpConverter(PixCConverter):
             filename_out = os.path.splitext(os.path.basename(path))[0]
             path_out = os.path.join(
                 self.path_out,
-                filename_out + '.shp',
+                filename_out + ".shp",
             )
             # cheking if output file and layer already exist
             if os.path.exists(path_out) and self.mode == "w":
@@ -28,9 +27,7 @@ class PixCNc2ShpConverter(PixCConverter):
 
             # converting data from xarray to geodataframe
             ncsimple.open_dataset()
-            gdf = ncsimple.to_geodataframe(
-                area_of_interest=self.area_of_interest
-            )
+            gdf = ncsimple.to_geodataframe(area_of_interest=self.area_of_interest)
 
             if gdf.size == 0:
                 tqdm.write(

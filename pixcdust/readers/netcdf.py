@@ -23,7 +23,6 @@ from datetime import datetime
 import numpy as np
 
 import xarray as xr
-import xvec
 import pandas as pd
 import geopandas as gpd
 

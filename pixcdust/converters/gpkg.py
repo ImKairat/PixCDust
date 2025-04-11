@@ -12,9 +12,7 @@ from pixcdust.readers.gpkg import PixCGpkgReader
 
 
 class PixCNc2GpkgConverter(PixCConverter):
-    """Class for converting Pixel Cloud files to Geopackage database
-
-    """
+    """Class for converting Pixel Cloud files to Geopackage database"""
 
     def database_from_nc(self):
         """function to create a geopackage database from a single or\
@@ -32,7 +30,7 @@ class PixCNc2GpkgConverter(PixCConverter):
             _, dt_time_start, cycle_number, pass_number, tile_number, swath_side = (
                 ncsimple.extract_info_from_nc_attrs(path)
             )
-            time_start = dt_time_start.strftime('%Y%m%d')
+            time_start = dt_time_start.strftime("%Y%m%d")
 
             layer_name = f"{time_start}_{cycle_number}_\
 {pass_number}_{tile_number}{swath_side}"
@@ -47,8 +45,7 @@ class PixCNc2GpkgConverter(PixCConverter):
                     continue
             # converting data from xarray to geodataframe
             ncsimple.open_dataset()
-            gdf = ncsimple.to_geodataframe(
-            )
+            gdf = ncsimple.to_geodataframe()
 
             if gdf.size == 0:
                 tqdm.write(
@@ -58,9 +55,10 @@ class PixCNc2GpkgConverter(PixCConverter):
                 continue
 
             if self._wse:
-                gdf[self._get_name_wse_var()] = \
-                    gdf[self._get_vars_wse_computation()[0]] -\
-                    gdf[self._get_vars_wse_computation()[1]]
+                gdf[self._get_name_wse_var()] = (
+                    gdf[self._get_vars_wse_computation()[0]]
+                    - gdf[self._get_vars_wse_computation()[1]]
+                )
             # writing pixc layer in output file, geopackage
             gdf.to_file(self.path_out, layer=layer_name, driver="GPKG")
 
@@ -68,21 +66,22 @@ class PixCNc2GpkgConverter(PixCConverter):
 @dataclass
 class GpkgH3Projecter:
     from pixcdust.converters.core import GeoLayerH3Projecter
-    
+
     path: str
     variable: str
     h3_res: int
     conditions: dict = None
-    h3_layer_pattern: str = '_h3'
+    h3_layer_pattern: str = "_h3"
     path_out: str = None
     database: PixCGpkgReader = None
 
     def __post_init__(self):
         self.database = PixCGpkgReader(self.path)
         self.database.layers = [
-            layer for layer in fiona.listlayers(self.path)
+            layer
+            for layer in fiona.listlayers(self.path)
             if not layer.endswith(self.h3_layer_pattern)
-            ]
+        ]
 
         if self.path_out is None:
             self.path_out = self.path
@@ -114,9 +113,8 @@ class GpkgH3Projecter:
 
 @dataclass
 class PixCZarr2GpkgConverter:
-    """Class for converting Pixel Cloud zcollection to Geopackage database
+    """Class for converting Pixel Cloud zcollection to Geopackage database"""
 
-    """
     path: str
     data: gpd.GeoDataFrame = None
 
